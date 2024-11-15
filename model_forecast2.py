@@ -8,7 +8,7 @@ from keras._tf_keras.keras.layers import Dense, LSTM, concatenate, Input
 import requests
 
 n_records_train = 300
-n_records_test = 10
+n_records_test = 20
 n_days_predict = 1
 # seq_length = 30
 

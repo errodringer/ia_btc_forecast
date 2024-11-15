@@ -38,14 +38,9 @@ seq_model = Sequential(
     ]
 )
 
-# model_concat = concatenate([linear_model.inputs[0], seq_model.inputs[0]], axis=-1)
-# model_concat = Dense(1)(model_concat)
-# model = Model(inputs=[linear_model.inputs[0], seq_model.inputs[0]], outputs=model_concat)
-
 merged_layer = Concatenate()([linear_model.outputs[0], seq_model.outputs[0]])
 model = Model([linear_model.inputs[0], seq_model.inputs[0]], merged_layer)
 
-# model.compile(optimizer='adam', loss='mean_squared_error', metrics=['mse'])
 model.compile(optimizer='adam', loss='mean_squared_error')
 
 full_y_val_descaled = np.array([]).reshape(-1, 1)
@@ -61,7 +56,6 @@ def create_sequences(data, seq_length):
         y.append(data[i + seq_length])
     return np.array(X), np.array(y)
 
-# seq_length = 30  # Usaremos los últimos 30 días para predecir el siguiente día
 X_seq_data, y_seq_data = create_sequences(prices["y_price"].values.reshape(-1, 1), seq_length)
 
 # plt.ion()
@@ -105,15 +99,9 @@ for i in range(n_records_train, (prices.shape[0] - seq_length - n_days_predict *
     predictions = linear_scaler.inverse_transform(np.array([predictions.mean()]).reshape(-1, 1))
     y_val_descaled = linear_scaler.inverse_transform(y_val)
 
-    # if i == n_records_train:
-    #     full_y_val_descaled = y_val_descaled
-    #     full_predictions = predictions
-    # else:
     full_y_val_descaled = np.concatenate([full_y_val_descaled, y_val_descaled])
     full_predictions = np.concatenate([full_predictions, predictions])
 
-    # Paso 7: Graficar los resultados
-    # plt.figure(figsize=(14, 7))
     fig, ax = plt.subplots(2)
     ax[0].plot(prices.index[-len(full_y_val_descaled):], full_y_val_descaled, color='blue', label='Precio Real')
     ax[0].plot(prices.index[-len(full_predictions):], full_predictions, color='red', label='Predicción')
@@ -122,10 +110,6 @@ for i in range(n_records_train, (prices.shape[0] - seq_length - n_days_predict *
     plt.xlabel('Fecha')
     plt.xticks(rotation=45)
     plt.ylabel('Precio en USD')
-    # plt.legend()
-    # plt.draw()
-    # plt.pause(0.01)
-    # plt.clf()
     plt.show()
 
 model.save('model/btc_forecast_model.keras')
@@ -134,11 +118,7 @@ url_current = "https://api.binance.com/api/v3/ticker/price"
 params_current = {"symbol": "BTCUSDT"}
 current_price_iterations = 5
 
-# for i in range(current_price_iterations):
 response = requests.get(url_current, params=params_current)
-# current_price = float(response.json()["price"])
-# print(f"Real price: {current_price}, Predicted price: {current_price_iterations}")
-# if i == 0:
 current_price = np.array(
     [
         linear_scaler.inverse_transform(X_linear_val)[-1][0],
@@ -150,13 +130,7 @@ print(f"Current price: {current_price[1]}")
 print(f"Predicted: {full_predictions[-1][0]}")
 diff = abs(full_predictions[-1][0] - current_price[1])
 print(f"Difference: {diff}, {round(float(diff/current_price[1]*100), 3)} %")
-# else:
-#     current_price = np.concatenate(
-#         [
-#             current_price.reshape(-1, 1),
-#             np.array(response.json()["price"]).astype(np.float32).reshape(-1, 1)
-#         ]
-#     )
+
 fig, ax = plt.subplots(2)
 ax[0].plot(prices.index[-len(full_y_val_descaled):], full_y_val_descaled, color='blue', label='Precio Real')
 ax[0].plot(prices.index[-len(full_predictions):], full_predictions, color='red', label='Predicción')
@@ -166,33 +140,4 @@ plt.title('Predicción del Precio de Bitcoin')
 plt.xlabel('Fecha')
 plt.xticks(rotation=45)
 plt.ylabel('Precio en USD')
-# plt.legend()
-# plt.draw()
-# plt.pause(0.01)
-# plt.clf()
 plt.show()
-
-
-# # probando
-# prices = pd.read_csv("data/prices.csv")
-# # TODO: quitar:
-# prices = prices[530:540]
-# prices.set_index("timestamp", inplace=True)
-# prices["y_price"] = prices["price"].shift(-1)
-# # prices = prices.dropna()
-#
-# X_data = prices["price"].values.reshape(-1, 1)
-# y_data = prices["y_price"].values.reshape(-1, 1)
-#
-# X_data = scaler.transform(X_data)
-# y_data = scaler.transform(y_data)
-#
-# model = load_model('model/btc_forecast_model.keras')
-#
-# predictions = model.predict(X_data)
-# predictions = scaler.inverse_transform(predictions)
-# y_data_descaled = scaler.inverse_transform(y_data)
-#
-# print(predictions)
-# print(y_data_descaled)
-# print(predictions-y_data_descaled)
