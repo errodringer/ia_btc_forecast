@@ -8,7 +8,7 @@ from keras._tf_keras.keras.layers import Dense, LSTM, concatenate, Input
 import requests
 
 n_records_train = 300
-n_records_test = 20
+n_records_test = 15
 n_days_predict = 1
 # seq_length = 30
 
@@ -55,7 +55,7 @@ for i in range(n_records_train, (df.shape[0] - n_days_predict * 2) + 1):
     X_val = scaler.transform(X_val)
     y_val = scaler.transform(y_val)
 
-    model.fit(X_train, y_train, epochs=1, batch_size=1, validation_data=(X_test, y_test), verbose=2)
+    model.fit(X_train, y_train, epochs=1, batch_size=1, validation_data=(X_test, y_test), verbose=0)
 
     predictions = model.predict(X_val)
     predictions = scaler.inverse_transform(predictions)
