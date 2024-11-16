@@ -7,7 +7,7 @@ params_current = {"symbol": "BTCUSDT"}
 
 # Solicitar precios históricos de Bitcoin en USD (últimos 30 días)
 url = "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart"
-params = {"vs_currency": "usd", "days": "365"}
+params = {"vs_currency": "usd", "days": "365", "interval": "daily"}
 response = requests.get(url, params=params)
 data = response.json()
 
