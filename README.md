@@ -1,11 +1,5 @@
 # 🚀 Pipeline de Datos de Bitcoin con Airflow
 
-## 📺 Video Tutorial - Parte 2
-
-Este es el código completo para el **segundo video** de la serie sobre predicción de Bitcoin con ML.
-
----
-
 ## 🎯 ¿Qué hace este DAG?
 
 El DAG `bitcoin_data_pipeline` ejecuta un pipeline completo que:
@@ -64,36 +58,6 @@ crear_directorios
 
 ---
 
-## 🎬 Tips para el Video
-
-### 🔥 Momentos "Wow" para mostrar:
-
-1. **El Graph View en Airflow UI** - Muestra el flujo visual del DAG
-2. **Los logs en tiempo real** - Abre los logs mientras corre y muestra los emojis 💰📊✅
-3. **El reporte HTML generado** - Abre el archivo HTML y muestra las estadísticas
-4. **Simula un fallo** - Modifica temporalmente el código para que falle (ej: URL incorrecta) y muestra cómo Airflow lo reintenta
-5. **El calendario de ejecuciones** - Muestra las ejecuciones programadas
-
-### 📝 Puntos clave para explicar:
-
-- **XCom**: Cómo las tasks se pasan datos entre sí
-- **Retry logic**: Por qué configuramos `retries=2`
-- **Schedule**: `'0 9 * * *'` corre a las 9 AM todos los días
-- **Parquet vs CSV**: Por qué usamos parquet (más eficiente)
-- **Validaciones**: Por qué es importante validar los datos antes de entrenar el modelo
-
-### 🎨 Customizaciones para hacer en vivo:
-
-```python
-# Cambia el schedule para que corra cada 5 minutos (para el demo)
-schedule_interval='*/5 * * * *',
-
-# O cambia los emojis en los logs
-logging.info("🎉 ¡Datos descargados con éxito!")
-```
-
----
-
 ## 📁 Archivos Generados
 
 Después de ejecutar el DAG, encontrarás:
@@ -134,15 +98,6 @@ docker-compose restart
 airflow scheduler restart
 ```
 
----
-
-## 🎓 Próximos Pasos (Video 3)
-
-En el próximo video usaremos estos datos para:
-- Explorar los datos con pandas
-- Crear features para el modelo de ML
-- Entrenar un modelo simple de predicción
-- ¡Comparar predicciones vs realidad!
 
 ---
 
@@ -151,16 +106,6 @@ En el próximo video usaremos estos datos para:
 - [Documentación de Airflow](https://airflow.apache.org/docs/)
 - [Yahoo Finance API](https://github.com/ranaroussi/yfinance)
 - [CoinGecko API](https://www.coingecko.com/en/api)
-
----
-
-## 💡 Ideas para Mejorar (para futuros videos)
-
-- [ ] Añadir alertas por email cuando Bitcoin sube/baja mucho
-- [ ] Guardar datos en una base de datos PostgreSQL
-- [ ] Añadir más fuentes de datos (Twitter sentiment, Google Trends)
-- [ ] Crear un dashboard en Grafana
-- [ ] Añadir tests unitarios para las funciones
 
 ---
 
