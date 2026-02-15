@@ -1,7 +1,11 @@
 """
 Script para visualizar y explorar las features creadas
-Útil para el video y para entender qué features se generaron
 """
+import sys
+from pathlib import Path
+
+# Agregar el directorio raíz al path
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 import pandas as pd
 import numpy as np
@@ -9,10 +13,8 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Configuración
-BASE_PATH = Path("/opt/airflow/data")
-PROCESSED_PATH = BASE_PATH / "processed"
-FEATURES_PATH = BASE_PATH / "features"
+from src.constants.constants import PROCESSED_PATH, FEATURES_PATH
+
 
 # Estilo de gráficos
 plt.style.use('seaborn-v0_8-darkgrid')
@@ -301,5 +303,5 @@ if __name__ == "__main__":
     print("💡 Próximos pasos:")
     print("   1. Revisar las correlaciones más importantes")
     print("   2. Identificar features redundantes")
-    print("   3. Entrenar el modelo de ML (Video 4)")
+    print("   3. Entrenar el modelo de ML")
     print()

@@ -1,33 +1,9 @@
-"""
-DAG de Feature Engineering para Bitcoin
-Video 3: Procesamiento y preparación de datos para el modelo ML
-Autor: Tu Canal de YouTube
-"""
-import sys
-from pathlib import Path
-
-# Agregar el directorio raíz al path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-
-from pathlib import Path
 import logging
-import sys
 
-from src.constants.constants import PROCESSED_PATH, FEATURES_PATH
+import pandas as pd
+import numpy as np
 
-
-# Verificar imports
-try:
-    import pandas as pd
-    import numpy as np
-    logging.info("✅ pandas y numpy importados correctamente")
-except ImportError as e:
-    logging.error(f"❌ Error importando librerías: {e}")
-    raise
-
-# Crear directorios
-for path in [PROCESSED_PATH, FEATURES_PATH]:
-    path.mkdir(parents=True, exist_ok=True)
+from src.constants.constants import PROCESSED_PATH
 
 
 def limpiar_datos(**context):
@@ -36,11 +12,10 @@ def limpiar_datos(**context):
     """
     logging.info("🧹 Limpiando datos...")
 
-    # raw_file = context['task_instance'].xcom_pull(
-    #     task_ids='cargar_datos',
-    #     key='raw_file'
-    # )
-    raw_file = "/Users/errodringer/Proyectos/ia_btc_forecast/data/processed/btc_raw.parquet"
+    raw_file = context['task_instance'].xcom_pull(
+        task_ids='cargar_datos',
+        key='raw_file'
+    )
 
     df = pd.read_parquet(raw_file)
     registros_iniciales = len(df)
@@ -85,8 +60,8 @@ def limpiar_datos(**context):
 
     logging.info(f"✅ Datos limpios guardados en: {output_file}")
 
-    # context['task_instance'].xcom_push(key='clean_file', value=str(output_file))
-    # context['task_instance'].xcom_push(key='records_cleaned', value=registros_finales)
+    context['task_instance'].xcom_push(key='clean_file', value=str(output_file))
+    context['task_instance'].xcom_push(key='records_cleaned', value=registros_finales)
 
     return str(output_file)
 

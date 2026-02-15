@@ -10,6 +10,7 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.operators.bash import BashOperator
 from airflow.utils.task_group import TaskGroup
+from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 
 
 # Agregar el directorio raíz al path
@@ -40,7 +41,7 @@ with DAG(
     'bitcoin_data_pipeline',
     default_args=default_args,
     description='Pipeline completo para descargar y validar datos de Bitcoin',
-    schedule_interval='0 9 * * *',  # Corre todos los días a las 9 AM
+    schedule_interval=None,  # Manual trigger (ejecutar después del desarrollo)
     catchup=False,  # No ejecutar fechas pasadas
     tags=['bitcoin', 'ml', 'data-engineering'],
 ) as dag:
@@ -77,6 +78,7 @@ with DAG(
             provide_context=True,
         )
 
+
     # Task 6: Generar reporte
     generar_reporte = PythonOperator(
         task_id='generar_reporte',
@@ -84,6 +86,13 @@ with DAG(
         provide_context=True,
     )
 
+    # Task 7: Trigger siguiente DAG
+    trigger_feature_engineering = TriggerDagRunOperator(
+        task_id='trigger_feature_engineering',
+        trigger_dag_id='bitcoin_feature_engineering',
+        wait_for_completion=False,  # True si quieres esperar a que termine el segundo DAG
+        reset_dag_run=True,         # Opcional: reinicia si ya existe un run
+    )
 
     # Definir dependencias (flujo del DAG)
-    crear_directorios >> dd >> vd >> generar_reporte
+    crear_directorios >> dd >> vd >> generar_reporte >> trigger_feature_engineering

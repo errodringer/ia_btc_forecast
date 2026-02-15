@@ -1,31 +1,7 @@
-"""
-DAG de Feature Engineering para Bitcoin
-Video 3: Procesamiento y preparación de datos para el modelo ML
-Autor: Tu Canal de YouTube
-"""
 import logging
-import sys
-from pathlib import Path
+import pandas as pd
 
-# Agregar el directorio raíz al path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-
-
-from src.constants.constants import HISTORICAL_PATH, PROCESSED_PATH, FEATURES_PATH
-
-
-# Verificar imports
-try:
-    import pandas as pd
-    import numpy as np
-    logging.info("✅ pandas y numpy importados correctamente")
-except ImportError as e:
-    logging.error(f"❌ Error importando librerías: {e}")
-    raise
-
-# Crear directorios
-for path in [PROCESSED_PATH, FEATURES_PATH]:
-    path.mkdir(parents=True, exist_ok=True)
+from src.constants.constants import HISTORICAL_PATH, PROCESSED_PATH
 
 
 def cargar_datos_historicos(**context):
