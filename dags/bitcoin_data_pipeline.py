@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.operators.bash import BashOperator
+from airflow.utils.task_group import TaskGroup
 
 
 # Agregar el directorio raíz al path
@@ -25,12 +26,12 @@ from src.download_data.validate_historical import validar_datos_historicos
 
 # Definir argumentos por defecto del DAG
 default_args = {
-    'owner': 'youtube_tutorial',
+    'owner': 'Errodringer',
     'depends_on_past': False,
     'start_date': datetime(2024, 1, 1),
     'email_on_failure': False,
     'email_on_retry': False,
-    'retries': 0,  # Reintentar 2 veces si falla
+    'retries': 0,  # Reintentar 0 veces si falla (para debugging)
     'retry_delay': timedelta(minutes=5),
 }
 
@@ -50,33 +51,31 @@ with DAG(
         bash_command=f'mkdir -p {HISTORICAL_PATH} {CURRENT_PATH} {REPORTS_PATH}',
     )
 
-    # Task 2: Descargar datos históricos
-    descargar_historicos = PythonOperator(
-        task_id='descargar_historicos',
-        python_callable=descargar_datos_historicos,
-        provide_context=True,
-    )
+    with TaskGroup("download_data") as dd:
+        descargar_historicos = PythonOperator(
+            task_id='descargar_historicos',
+            python_callable=descargar_datos_historicos,
+            provide_context=True,
+        )
 
-    # Task 3: Validar datos históricos
-    validar_historicos = PythonOperator(
-        task_id='validar_historicos',
-        python_callable=validar_datos_historicos,
-        provide_context=True,
-    )
+        descargar_actual = PythonOperator(
+            task_id='descargar_precio_actual',
+            python_callable=descargar_precio_actual,
+            provide_context=True,
+        )
 
-    # Task 4: Descargar precio actual
-    descargar_actual = PythonOperator(
-        task_id='descargar_precio_actual',
-        python_callable=descargar_precio_actual,
-        provide_context=True,
-    )
+    with TaskGroup("validate_data") as vd:
+        validar_historicos = PythonOperator(
+            task_id='validar_historicos',
+            python_callable=validar_datos_historicos,
+            provide_context=True,
+        )
 
-    # Task 5: Validar precio actual
-    validar_actual = PythonOperator(
-        task_id='validar_precio_actual',
-        python_callable=validar_precio_actual,
-        provide_context=True,
-    )
+        validar_actual = PythonOperator(
+            task_id='validar_precio_actual',
+            python_callable=validar_precio_actual,
+            provide_context=True,
+        )
 
     # Task 6: Generar reporte
     generar_reporte = PythonOperator(
@@ -87,5 +86,4 @@ with DAG(
 
 
     # Definir dependencias (flujo del DAG)
-    crear_directorios >> descargar_historicos >> validar_historicos >> generar_reporte
-    crear_directorios >> descargar_actual >> validar_actual >> generar_reporte
+    crear_directorios >> dd >> vd >> generar_reporte
