@@ -4,7 +4,6 @@ from pathlib import Path
 # Agregar el directorio raíz al path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-import yfinance as yf
 import pandas as pd
 import logging
 
@@ -18,33 +17,30 @@ def generar_reporte_html(**context):
     Genera un reporte HTML con visualizaciones de los datos descargados
     """
     logging.info("📊 Generando reporte HTML...")
-    
+
     # Obtener datos de XCom
     historical_file = context['task_instance'].xcom_pull(
-        task_ids='descargar_historicos',
+        task_ids='download_data.descargar_historicos',
         key='historical_file'
     )
-    # historical_file = "/Users/errodringer/Proyectos/ia_btc_forecast/data/historical/btc_historical_20260214.parquet"
     current_price = context['task_instance'].xcom_pull(
-        task_ids='descargar_precio_actual',
+        task_ids='download_data.descargar_precio_actual',
         key='current_price'
     )
-    # current_price = 50000.00
     historical_records = context['task_instance'].xcom_pull(
-        task_ids='descargar_historicos',
+        task_ids='download_data.descargar_historicos',
         key='historical_records'
     )
-    # historical_records = 732
-    
+
     # Leer datos históricos
     df = pd.read_parquet(historical_file)
-    
+
     # Calcular estadísticas
     precio_max = df['high'].max()
     precio_min = df['low'].min()
     precio_promedio = df['close'].mean()
     volatilidad = df['close'].std()
-    
+
     # Generar HTML
     html_content = f"""
     <!DOCTYPE html>
@@ -121,7 +117,7 @@ def generar_reporte_html(**context):
     <body>
         <div class="container">
             <h1>🚀 Pipeline de Bitcoin - Reporte de Datos</h1>
-            
+
             <div class="success">
                 ✅ Pipeline ejecutado exitosamente - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
             </div>
@@ -179,17 +175,21 @@ def generar_reporte_html(**context):
     </body>
     </html>
     """
-    
+
     # Guardar reporte
     report_filename = f"reporte_{datetime.now().strftime('%Y%m%d_%H%M%S')}.html"
     report_path = REPORTS_PATH / report_filename
-    
+
     with open(report_path, 'w', encoding='utf-8') as f:
         f.write(html_content)
-    
+
     logging.info(f"✅ Reporte generado: {report_path}")
-    logging.info(f"📊 Precio actual vs promedio: {'+' if current_price > precio_promedio else '-'}${abs(current_price - precio_promedio):,.2f}")
-    
+    logging.info(
+        f"📊 Precio actual vs promedio: "
+        f"{'+' if current_price > precio_promedio else '-'}"
+        f"${abs(current_price - precio_promedio):,.2f}"
+    )
+
     return str(report_path)
 
 

@@ -31,7 +31,10 @@ def descargar_datos_historicos(**context):
         btc_data.reset_index(inplace=True)
         # Aquí está el cambio clave - si tienes multiindex en columnas:
         if isinstance(btc_data.columns, pd.MultiIndex):
-            btc_data.columns = [' '.join(col).strip().split(" ")[0] for col in btc_data.columns.values]
+            btc_data.columns = [
+                ' '.join(col).strip().split(' ', maxsplit=1)[0] 
+                for col in btc_data.columns.values
+            ]
         btc_data.columns = btc_data.columns.str.lower()
 
         # Guardar en formato parquet (más eficiente)
