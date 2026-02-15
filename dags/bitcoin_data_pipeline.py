@@ -40,7 +40,7 @@ with DAG(
     'bitcoin_data_pipeline',
     default_args=default_args,
     description='Pipeline completo para descargar y validar datos de Bitcoin',
-    schedule_interval='0 9 * * *',  # Corre todos los días a las 9 AM
+    schedule_interval=None,  # Manual trigger
     catchup=False,  # No ejecutar fechas pasadas
     tags=['bitcoin', 'ml', 'data-engineering'],
 ) as dag:

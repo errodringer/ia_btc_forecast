@@ -1,12 +1,5 @@
-import sys
-from pathlib import Path
-
-# Agregar el directorio raíz al path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-
-import pandas as pd
 import logging
-
+import pandas as pd
 from datetime import datetime
 
 from src.constants.constants import CURRENT_PATH, REPORTS_PATH
