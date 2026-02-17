@@ -28,7 +28,7 @@ def preparar_dataset_final(**context):
 
     # Seleccionar features para el modelo
     # Excluir: date, precio original, adj close, y las variables target (excepto una)
-    columnas_excluir = ['date', 'open', 'high', 'low', 'close', 'volume', 
+    columnas_excluir = ['date', 'open', 'high', 'low', 'close', 'volume', 'target_direction',
                         'adj close', 'target_next_close', 'target_pct_change']
 
     feature_columns = [col for col in df.columns if col not in columnas_excluir]
