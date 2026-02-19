@@ -1,10 +1,26 @@
-requests~=2.32.3
-pandas~=2.2.3
-scikit-learn~=1.5.2
-tensorflow
-matplotlib
-numpy~=2.0.2
-keras~=3.6.0
-yfinance
-snscrape
-pytrends
+# === AIRFLOW ===
+apache-airflow==2.9.3
+
+# === DATA PROCESSING ===
+pandas==2.1.4
+pyarrow==15.0.0  # Para archivos parquet
+
+# === DATA DOWNLOAD ===
+yfinance==1.1.0
+requests==2.31.0
+
+# === VISUALIZACIÓN (opcional, para explorar datos) ===
+matplotlib==3.8.2
+seaborn==0.13.1
+
+# === MACHINE LEARNING ===
+scikit-learn==1.5.2
+
+# # Dependencias para el modelo de predicción
+# scikit-learn~=1.5.2
+# tensorflow
+# matplotlib
+# numpy~=2.0.2
+# keras~=3.6.0
+# snscrape
+# pytrends
