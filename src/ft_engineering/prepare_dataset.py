@@ -42,8 +42,8 @@ def preparar_dataset_final(**context):
     # También guardamos los precios para referencia
     prices = df[['date', 'close', 'target_next_close']].copy()
 
-    # Split temporal: 80% train, 20% test
-    split_index = int(len(df) * 0.8)
+    # Split temporal: 90% train, 10% test
+    split_index = int(len(df) * 0.9)
 
     X_train = X.iloc[:split_index]
     X_test = X.iloc[split_index:]

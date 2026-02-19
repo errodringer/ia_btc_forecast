@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.operators.bash import BashOperator
+from airflow.utils.task_group import TaskGroup
 
 # Agregar el directorio raíz al path
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -62,23 +63,24 @@ with DAG(
         provide_context=True,
     )
 
-    entrenar_lr = PythonOperator(
-        task_id='entrenar_logistic_regression',
-        python_callable=entrenar_logistic_regression,
-        provide_context=True,
-    )
+    with TaskGroup("training_models") as tm:
+        entrenar_lr = PythonOperator(
+            task_id='entrenar_logistic_regression',
+            python_callable=entrenar_logistic_regression,
+            provide_context=True,
+        )
 
-    entrenar_rf = PythonOperator(
-        task_id='entrenar_random_forest',
-        python_callable=entrenar_random_forest,
-        provide_context=True,
-    )
+        entrenar_rf = PythonOperator(
+            task_id='entrenar_random_forest',
+            python_callable=entrenar_random_forest,
+            provide_context=True,
+        )
 
-    entrenar_gb = PythonOperator(
-        task_id='entrenar_gradient_boosting',
-        python_callable=entrenar_gradient_boosting,
-        provide_context=True,
-    )
+        entrenar_gb = PythonOperator(
+            task_id='entrenar_gradient_boosting',
+            python_callable=entrenar_gradient_boosting,
+            provide_context=True,
+        )
 
     evaluar = PythonOperator(
         task_id='evaluar_modelos',
@@ -98,6 +100,4 @@ with DAG(
         provide_context=True,
     )
 
-    cargar_data >> normalizar
-    normalizar >> [entrenar_lr, entrenar_rf, entrenar_gb]
-    [entrenar_lr, entrenar_rf, entrenar_gb] >> evaluar >> graficos >> reporte
+    crear_directorios >> cargar_data >> normalizar >> tm >> evaluar >> graficos >> reporte
