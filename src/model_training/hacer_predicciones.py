@@ -28,9 +28,8 @@ def cargar_mejor_modelo():
         scaler = pickle.load(f)
     print("✅ Scaler cargado")
     
-    # Por defecto, usar Random Forest (suele ser el mejor)
-    # Puedes cambiar a 'logistic_regression.pkl' o 'gradient_boosting.pkl'
-    model_path = MODELS_PATH / "random_forest.pkl"
+    # Cargar modelo
+    model_path = MODELS_PATH / "best_model.pkl"
     
     with open(model_path, 'rb') as f:
         model = pickle.load(f)
@@ -228,7 +227,7 @@ def simular_trading_strategy():
     print(f"💵 Capital inicial: ${capital_inicial:,.2f}")
     print(f"📊 Período: {prices_test['date'].min().strftime('%Y-%m-%d')} a {prices_test['date'].max().strftime('%Y-%m-%d')}")
     print()
-    print("Estrategia: Comprar cuando probabilidad > 60%, vender al día siguiente")
+    print("Estrategia: Comprar cuando probabilidad > 80%, vender al día siguiente")
     print()
     
     for i in range(len(predicciones) - 1):
@@ -238,8 +237,8 @@ def simular_trading_strategy():
         pred = predicciones[i]
         prob = probabilidades[i]
         
-        # Si predice subida con confianza > 60%, comprar
-        if pred == 1 and prob > 0.6 and posicion == 0:
+        # Si predice subida con confianza > 80%, comprar
+        if pred == 1 and prob > 0.8 and posicion == 0:
             # Comprar
             posicion = 1
             precio_compra = precio_actual

@@ -25,13 +25,16 @@ def entrenar_random_forest(**context):
 
     # Entrenar modelo
     model = RandomForestClassifier(
-        n_estimators=1000,
-        max_depth=3,
-        min_samples_split=10,
-        min_samples_leaf=5,
+        n_estimators=10,
+        max_depth=5,
+        min_samples_split=0.05,
+        min_samples_leaf=0.01,
         random_state=42,
         class_weight='balanced',
-        n_jobs=-1  # Usar todos los cores
+        warm_start=False,
+        max_features=0.5,
+        oob_score=True,
+        n_jobs=1
     )
 
     logging.info("🔄 Entrenando modelo (puede tardar un poco)...")

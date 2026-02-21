@@ -25,13 +25,16 @@ def entrenar_gradient_boosting(**context):
 
     # Entrenar modelo
     model = GradientBoostingClassifier(
-        n_estimators=100,
-        learning_rate=0.1,
-        max_depth=5,
-        min_samples_split=10,
-        min_samples_leaf=5,
+        n_estimators=5,
+        learning_rate=0.8,
+        max_depth=6,
+        min_samples_split=15,
+        min_samples_leaf=10,
         random_state=42,
-        subsample=0.8
+        warm_start=True,
+        verbose=0,
+        subsample=0.6,
+        validation_fraction=0.2,
     )
 
     logging.info("🔄 Entrenando modelo (puede tardar un poco)...")
