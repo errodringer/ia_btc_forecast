@@ -12,15 +12,12 @@ requests==2.31.0
 # === VISUALIZACIÓN (opcional, para explorar datos) ===
 matplotlib==3.8.2
 seaborn==0.13.1
+plotly==5.18.0
 
 # === MACHINE LEARNING ===
 scikit-learn==1.5.2
 
-# # Dependencias para el modelo de predicción
-# scikit-learn~=1.5.2
-# tensorflow
-# matplotlib
-# numpy~=2.0.2
-# keras~=3.6.0
-# snscrape
-# pytrends
+# === API Y DASHBOARD ===
+flask==2.2.5
+flask-cors==6.0.2
+streamlit==1.54.0
