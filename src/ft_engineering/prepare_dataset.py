@@ -86,8 +86,3 @@ def preparar_dataset_final(**context):
     context['task_instance'].xcom_push(key='test_size', value=len(X_test))
 
     return True
-
-
-if __name__ == "__main__":
-    # Prueba local
-    preparar_dataset_final()

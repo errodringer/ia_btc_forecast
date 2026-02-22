@@ -44,8 +44,3 @@ def cargar_datos_historicos(**context):
     context['task_instance'].xcom_push(key='num_records', value=len(df))
 
     return str(output_file)
-
-
-if __name__ == "__main__":
-    # Prueba local
-    cargar_datos_historicos()

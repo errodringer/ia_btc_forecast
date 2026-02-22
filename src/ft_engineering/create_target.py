@@ -47,8 +47,3 @@ def crear_target_variable(**context):
     context['task_instance'].xcom_push(key='with_target_file', value=str(output_file))
 
     return str(output_file)
-
-
-if __name__ == "__main__":
-    # Prueba local
-    crear_target_variable()

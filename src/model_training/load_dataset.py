@@ -54,7 +54,3 @@ def cargar_datasets(**context):
     context['task_instance'].xcom_push(key='num_features', value=X_train.shape[1])
 
     return True
-
-if __name__ == "__main__":
-    # Para pruebas locales
-    cargar_datasets()
