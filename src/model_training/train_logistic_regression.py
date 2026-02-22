@@ -25,8 +25,10 @@ def entrenar_logistic_regression(**context):
 
     # Entrenar modelo
     model = LogisticRegression(
-        max_iter=1000,
+        max_iter=100,
         random_state=42,
+        n_jobs=1,
+        fit_intercept=True,
         class_weight='balanced'  # Para manejar desbalance de clases
     )
 

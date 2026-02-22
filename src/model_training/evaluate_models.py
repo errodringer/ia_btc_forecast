@@ -121,9 +121,32 @@ def evaluar_modelos_en_test(**context):
     logging.info(f"\n✅ Evaluación completa guardada en: {MODELS_PATH / 'test_results.json'}")
 
     # Determinar mejor modelo
-    mejor_modelo = max(resultados, key=lambda x: x['f1'])
+    mejor_modelo = max(resultados, key=lambda x: x['accuracy'])
     logging.info(f"\n🏆 MEJOR MODELO: {mejor_modelo['model']}")
-    logging.info(f"   F1-Score: {mejor_modelo['f1']:.4f}")
+    logging.info(f"   Accuracy: {mejor_modelo['accuracy']:.4f}")
+
+    # Mapeo de nombres a rutas de archivos
+    modelo_paths = {
+        'Logistic Regression': MODELS_PATH / "logistic_regression.pkl",
+        'Random Forest': MODELS_PATH / "random_forest.pkl",
+        'Gradient Boosting': MODELS_PATH / "gradient_boosting.pkl"
+    }
+    
+    # Cargar el mejor modelo desde su archivo
+    mejor_modelo_nombre = mejor_modelo['model']
+    mejor_modelo_path = modelo_paths[mejor_modelo_nombre]
+    
+    logging.info(f"📂 Cargando mejor modelo desde: {mejor_modelo_path}")
+    
+    with open(mejor_modelo_path, 'rb') as f:
+        best_model = pickle.load(f)
+    
+    # Guardar como best_model.pkl
+    best_model_save_path = MODELS_PATH / "best_model.pkl"
+    with open(best_model_save_path, 'wb') as f:
+        pickle.dump(best_model, f)
+    
+    logging.info(f"✅ Mejor modelo guardado como: {best_model_save_path}")
 
     context['task_instance'].xcom_push(key='mejor_modelo', value=mejor_modelo['model'])
     context['task_instance'].xcom_push(key='resultados', value=resultados)
