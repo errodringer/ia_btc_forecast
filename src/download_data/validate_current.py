@@ -23,7 +23,3 @@ def validar_precio_actual(**context):
     logging.info(f"✅ Precio actual validado: ${current_price:,.2f}")
 
     return True
-
-
-if __name__ == "__main__":
-    validar_precio_actual()

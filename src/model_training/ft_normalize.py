@@ -59,8 +59,3 @@ def normalizar_features(**context):
     logging.info(f"💾 Scaler guardado en: {MODELS_PATH / 'scaler.pkl'}")
 
     return True
-
-
-if __name__ == "__main__":
-    # Para pruebas locales
-    normalizar_features()

@@ -184,7 +184,3 @@ def generar_reporte_html(**context):
     )
 
     return str(report_path)
-
-
-if __name__ == "__main__":
-    generar_reporte_html()

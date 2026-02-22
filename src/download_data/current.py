@@ -71,6 +71,3 @@ def descargar_precio_actual(**context):
         logging.error(f"❌ Error descargando precio actual: {str(e)}")
         raise
 
-
-if __name__ == "__main__":
-    descargar_precio_actual()

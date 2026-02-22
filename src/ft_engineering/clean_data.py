@@ -64,8 +64,3 @@ def limpiar_datos(**context):
     context['task_instance'].xcom_push(key='records_cleaned', value=registros_finales)
 
     return str(output_file)
-
-
-if __name__ == "__main__":
-    # Prueba local
-    limpiar_datos()

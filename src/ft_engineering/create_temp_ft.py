@@ -67,8 +67,3 @@ def crear_features_temporales(**context):
     context['task_instance'].xcom_push(key='num_temporal_features', value=len(features_temporales))
 
     return str(output_file)
-
-
-if __name__ == "__main__":
-    # Prueba local
-    crear_features_temporales()

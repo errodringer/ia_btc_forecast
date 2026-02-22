@@ -313,8 +313,3 @@ def generar_reporte_features(**context):
     logging.info(f"✅ Reporte generado: {report_path}")
 
     return str(report_path)
-
-
-if __name__ == "__main__":
-    # Prueba local
-    generar_reporte_features()
