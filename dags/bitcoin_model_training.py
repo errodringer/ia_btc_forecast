@@ -10,6 +10,8 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.operators.bash import BashOperator
 from airflow.utils.task_group import TaskGroup
+from airflow.operators.trigger_dagrun import TriggerDagRunOperator
+
 
 # Agregar el directorio raíz al path
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -100,4 +102,11 @@ with DAG(
         provide_context=True,
     )
 
-    crear_directorios >> cargar_data >> normalizar >> tm >> evaluar >> graficos >> reporte
+    trigger_daily_predictions = TriggerDagRunOperator(
+        task_id='trigger_daily_predictions',
+        trigger_dag_id='bitcoin_daily_prediction',
+        wait_for_completion=False,
+        reset_dag_run=True,
+    )
+
+    crear_directorios >> cargar_data >> normalizar >> tm >> evaluar >> graficos >> reporte >> trigger_daily_predictions
