@@ -1,6 +1,6 @@
 """
 DAG para descargar datos históricos y precio actual de Bitcoin
-Autor: Tu Canal de YouTube
+Autor: Errodringer
 Descripción: Pipeline completo para alimentar nuestro modelo de predicción de BTC
 """
 import sys

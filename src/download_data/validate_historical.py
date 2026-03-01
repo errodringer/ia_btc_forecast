@@ -57,7 +57,3 @@ def validar_datos_historicos(**context):
     logging.info(f"📈 Días con cambios >50%: {len(outliers)}")
 
     return True
-
-
-if __name__ == "__main__":
-    validar_datos_historicos()

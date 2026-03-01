@@ -28,7 +28,7 @@ def preparar_dataset_final(**context):
 
     # Seleccionar features para el modelo
     # Excluir: date, precio original, adj close, y las variables target (excepto una)
-    columnas_excluir = ['date', 'open', 'high', 'low', 'close', 'volume', 
+    columnas_excluir = ['date', 'open', 'high', 'low', 'close', 'volume', 'target_direction',
                         'adj close', 'target_next_close', 'target_pct_change']
 
     feature_columns = [col for col in df.columns if col not in columnas_excluir]
@@ -42,8 +42,8 @@ def preparar_dataset_final(**context):
     # También guardamos los precios para referencia
     prices = df[['date', 'close', 'target_next_close']].copy()
 
-    # Split temporal: 80% train, 20% test
-    split_index = int(len(df) * 0.8)
+    # Split temporal: 90% train, 10% test
+    split_index = int(len(df) * 0.9)
 
     X_train = X.iloc[:split_index]
     X_test = X.iloc[split_index:]
@@ -86,8 +86,3 @@ def preparar_dataset_final(**context):
     context['task_instance'].xcom_push(key='test_size', value=len(X_test))
 
     return True
-
-
-if __name__ == "__main__":
-    # Prueba local
-    preparar_dataset_final()

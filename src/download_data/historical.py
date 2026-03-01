@@ -55,7 +55,3 @@ def descargar_datos_historicos(**context):
     except Exception as e:
         logging.error(f"❌ Error descargando datos históricos: {str(e)}")
         raise
-
-
-if __name__ == "__main__":
-    descargar_datos_historicos()

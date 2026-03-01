@@ -87,8 +87,47 @@ def crear_features_tecnicas(**context):
     df['volume_ratio'] = df['volume'] / df['volume_sma_20']
     logging.info("   ✅ Features de volumen")
 
+    # ===== PRECIOS HISTÓRICOS =====
+    logging.info("💰 Agregando precios de días anteriores...")
+
+    # Precio de cierre de días anteriores
+    dias_atras_list = [1, 2, 3]
+    for dias_atras in dias_atras_list:
+        df[f'close_lag_{dias_atras}'] = df['close'].shift(dias_atras)
+        logging.info(f"   ✅ Precio cierre -({dias_atras}d)")
+
+    # Diferencia absoluta respecto a días anteriores
+    for dias_atras in dias_atras_list:
+        df[f'price_diff_{dias_atras}'] = df['close'] - df[f'close_lag_{dias_atras}']
+        logging.info(f"   ✅ Diferencia precio -({dias_atras}d)")
+
+    # Cambio porcentual respecto a días anteriores
+    for dias_atras in dias_atras_list:
+        df[f'pct_change_{dias_atras}'] = (
+            (df['close'] - df[f'close_lag_{dias_atras}']) / 
+            df[f'close_lag_{dias_atras}'] * 100
+        )
+        logging.info(f"   ✅ Cambio % -({dias_atras}d)")
+
+    # Retorno de días anteriores
+    for dias_atras in dias_atras_list:
+        df[f'return_{dias_atras}d'] = (
+            (df['close'] - df[f'close_lag_{dias_atras}']) / 
+            df[f'close_lag_{dias_atras}']
+        )
+        logging.info(f"   ✅ Retorno -{dias_atras}d")
+
+    # Mínimo y máximo de los últimos 3, 7, 14 días
+    for periodo in [3, 7, 14]:
+        df[f'min_close_{periodo}d'] = df['close'].rolling(window=periodo).min()
+        df[f'max_close_{periodo}d'] = df['close'].rolling(window=periodo).max()
+        # Distancia al máximo y mínimo
+        df[f'dist_to_min_{periodo}d'] = df['close'] - df[f'min_close_{periodo}d']
+        df[f'dist_to_max_{periodo}d'] = df['close'] - df[f'max_close_{periodo}d']
+        logging.info(f"   ✅ Min/Max/Distancia últimos {periodo}d")
+
     # Contar features creadas
-    features_tecnicas = [col for col in df.columns if col not in 
+    features_tecnicas = [col for col in df.columns if col not in
                          ['date', 'open', 'high', 'low', 'close', 'volume', 'adj close']]
 
     logging.info(f"✅ Total de features técnicas creadas: {len(features_tecnicas)}")
@@ -103,8 +142,3 @@ def crear_features_tecnicas(**context):
     context['task_instance'].xcom_push(key='num_technical_features', value=len(features_tecnicas))
 
     return str(output_file)
-
-
-if __name__ == "__main__":
-    # Prueba local
-    crear_features_tecnicas()
